@@ -1,23 +1,16 @@
-from django.shortcuts import render
-
-# Create your views here.
-
-
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import mixins
+from rest_framework import generics
 
 from .models import Blog
 from .serializers import BlogSerializer
 
 
-class BlogListView(APIView):
+class BlogListView(generics.ListAPIView):
     """
-    List all snippets, or create a new snippet.
+    博客列表
     """
 
-    def get(self, request, format=None):
-        snippets = Blog.objects.all()
-        serializer = BlogSerializer(snippets, many=True)
-        return Response(serializer.data)
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+

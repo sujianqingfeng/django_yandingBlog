@@ -26,6 +26,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^xadmin/', xadmin.site.urls),
-    url(r'blogs/$', BolgListView.as_view(), name='bolg-list'),
+    url(r'blogs/$', BlogListView.as_view(), name='bolg-list'),
     url(r'doc/', include_docs_urls(title='yanding'))
 ]

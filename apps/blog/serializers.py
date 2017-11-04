@@ -8,10 +8,13 @@
 @time: 2017/10/27 0:39
 """
 from rest_framework import serializers
+from blog.models import Blog
 
 
-class BlogSerializer(serializers.Serializer):
-    content = serializers.models.TextField()
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = ('content', 'add_time', 'update_time')
 
 
 if __name__ == '__main__':
