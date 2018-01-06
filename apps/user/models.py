@@ -15,7 +15,7 @@ class User(AbstractUser):
     add_time = models.DateField(default=datetime.now, verbose_name='添加时间')
     update_time = models.DateField(default=datetime.now, verbose_name='更新时间')
     is_delete = models.BooleanField(default=False,verbose_name='是否删除')
-
+    phone = models.CharField(null=True,blank=True,max_length=11,verbose_name="用户手机")
     class Meta:
         verbose_name = '用户'
         verbose_name_plural = '用户'
