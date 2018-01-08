@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'YandingBlog.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'yanding',
+        'NAME': 'yanding_blog',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': '127.0.0.1',
