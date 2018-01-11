@@ -12,9 +12,14 @@ from blog.models import Blog
 
 
 class BlogSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    update_time = serializers.DateField(read_only=True)
     class Meta:
         model = Blog
-        fields = ('content', 'add_time', 'update_time')
+        fields = ('content', 'add_time', 'update_time','user')
 
 
 if __name__ == '__main__':

@@ -27,3 +27,4 @@ class CustomBackend(ModelBackend):
 
 class UserViewset(CreateModelMixin,viewsets.GenericViewSet):
     serializer_class = UserRegisterSerializer
+    queryset = User.objects.all()
