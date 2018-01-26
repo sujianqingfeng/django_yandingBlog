@@ -9,6 +9,7 @@
 """
 from rest_framework import serializers
 from blog.models import Blog
+from blog.models import Category
 
 
 class BlogSerializer(serializers.ModelSerializer):
@@ -17,10 +18,19 @@ class BlogSerializer(serializers.ModelSerializer):
     )
 
     update_time = serializers.DateField(read_only=True)
+    # add_time = serializers.DateField(read_only=True)
     class Meta:
         model = Blog
-        fields = ('content', 'add_time', 'update_time','user')
+        fields = '__all__'
 
+
+class CategorySerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    update_time = serializers.DateField(read_only=True)
+    add_time = serializers.DateField(read_only=True)
+    class Meta:
+        model = Category
+        fields = '__all__'
 
 if __name__ == '__main__':
     pass

@@ -22,28 +22,24 @@ from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework.routers import DefaultRouter
 
 # from blog.views_base import BolgListView
-from blog.views import BlogListView
-from blog.views import BlogCreateView
-
+from blog.views import BlogViewSet,CategoryViewSet
 from user.views import UserViewset
+from review.views import ReviewViewSet
 
 
 
 router = DefaultRouter()
 
 router.register(r'users',UserViewset,base_name='users')
-
-# router.register(r'blogs/list/$',BlogListView,base_name='bolg-list')
-
-# router.register(r'blogs/add',BlogCreateView.as_view(),base_name='bolg-add')
+router.register(r'categorys',CategoryViewSet,base_name='categorys')
+router.register(r'blogs',BlogViewSet,base_name='bolgs')
+router.register(r'reviews',ReviewViewSet,base_name='reviews')
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # url(r'^xadmin/', xadmin.site.urls),
-    url(r'blogs/$', BlogListView.as_view(), name='bolg-list'),
-    url(r'blogs/add/$',BlogCreateView.as_view(),name='bolg-add'),
     url(r'doc/', include_docs_urls(title='yanding')),
     url(r'^login/', obtain_jwt_token),
     url(r'^', include(router.urls))
