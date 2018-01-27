@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'django_filters',
     'user.apps.UserConfig',
     'blog.apps.BlogConfig',
-    'review.apps.ReviewConfig'
+    'review.apps.ReviewConfig',
+    'like.apps.LikeConfig'
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -137,8 +138,7 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
     )
 }
 

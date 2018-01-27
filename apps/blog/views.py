@@ -5,17 +5,19 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-
+from django.contrib.auth import get_user_model
 
 from .models import Blog,Category
-from .serializers import BlogSerializer,CategorySerializer
+from .serializers import BlogSerializer,CategoryCreateSerializer,CategoryDetailSerializer
 from .filters import BlogFilter
 
+
+User = get_user_model()
 
 class BlogPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
-    page_size_query_description = '一页多少个'
+    page_size_query_description = '个数'
     page_query_param = 'page'
     page_query_description = '页数'
     max_page_size = 100
@@ -24,7 +26,19 @@ class BlogPagination(PageNumberPagination):
 class BlogViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,mixins.UpdateModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     '''
     list:
-        获取博客列表
+    获取博客列表
+
+    retrieve:
+    博客详情
+
+    create:
+    添加博客
+
+    update:
+    更新博客
+
+    destroy:
+    删除博客
     '''
     serializer_class = BlogSerializer
     queryset = Blog.objects.all()
@@ -38,11 +52,34 @@ class BlogViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.DestroyMo
 
 
 
-class CategoryViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,mixins.UpdateModelMixin,viewsets.GenericViewSet):
-    serializer_class = CategorySerializer
-    queryset = Category.objects.all()
+class CategoryViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.DestroyModelMixin,mixins.UpdateModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+    '''
+    list:
+    得到所有类别
+
+    create:
+    创建类别
+
+    detele:
+    删除类别
+
+    update:
+    修改类别
+    '''
 
 
+
+    def get_serializer_class(self):
+
+        if self.action == 'create':
+            return CategoryCreateSerializer
+        else:
+            return CategoryDetailSerializer
+
+    def get_queryset(self):
+        if self.action == 'retrieve':
+            user = User.objects.filter(id=self.kwargs['pk'])
+            return Category.objects.filter(user=user)
 
 
 

@@ -13,3 +13,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username','phone','password')
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    email = serializers.EmailField(required=False,help_text='邮件')
+
+    class Meta:
+        model = User
+        fields = ('username','phone','sex','birthday','email')

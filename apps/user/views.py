@@ -5,11 +5,14 @@
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
-from rest_framework.mixins import CreateModelMixin
+from rest_framework import mixins
 from rest_framework import viewsets
+from rest_framework import permissions
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 
 
-from .serializers import UserRegisterSerializer
+from .serializers import UserRegisterSerializer,UserSerializer
 
 
 User = get_user_model()
@@ -25,6 +28,36 @@ class CustomBackend(ModelBackend):
             return None
 
 
-class UserViewset(CreateModelMixin,viewsets.GenericViewSet):
-    serializer_class = UserRegisterSerializer
+class UserViewset(mixins.CreateModelMixin,mixins.RetrieveModelMixin,mixins.UpdateModelMixin,viewsets.GenericViewSet):
+    '''
+    create:
+    注册用户
+
+    read:
+    得到用户信息
+
+    update:
+    修改用户
+
+    partial_update:
+    部分修改
+    '''
+
     queryset = User.objects.all()
+    authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
+
+    def get_object(self):
+        return self.request.user
+
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return []
+        else:
+            return [permissions.IsAuthenticated()]
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserRegisterSerializer
+        else:
+            return UserSerializer
