@@ -1,6 +1,7 @@
 from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import viewsets
+from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
@@ -77,9 +78,15 @@ class CategoryViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.Destr
             return CategoryDetailSerializer
 
     def get_queryset(self):
-        if self.action == 'retrieve':
+        if self.action == 'list':
             user = User.objects.filter(id=self.kwargs['pk'])
             return Category.objects.filter(user=user)
+
+
+
+    def cat(self, request, *args, **kwargs):
+
+        return Response({'111':''})
 
 
 

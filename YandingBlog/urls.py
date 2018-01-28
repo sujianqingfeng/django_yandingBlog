@@ -21,25 +21,18 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework.routers import DefaultRouter
 
-
-from blog.views import BlogViewSet,CategoryViewSet
+from blog.views import BlogViewSet, CategoryViewSet
 from user.views import UserViewset
 from review.views import ReviewViewSet
 from like.views import LikeViewSet
 
-
-
 router = DefaultRouter()
 
-
-
-router.register(r'users',UserViewset,base_name='users')
-router.register(r'categorys',CategoryViewSet,base_name='categorys')
-router.register(r'blogs',BlogViewSet,base_name='bolgs')
-router.register(r'reviews',ReviewViewSet,base_name='reviews')
-router.register(r'like',LikeViewSet,base_name='like')
-
-
+router.register(r'users', UserViewset, base_name='users')
+# router.register(r'categorys', CategoryViewSet, base_name='categorys')
+router.register(r'blogs', BlogViewSet, base_name='bolgs')
+router.register(r'reviews', ReviewViewSet, base_name='reviews')
+router.register(r'like', LikeViewSet, base_name='like')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -47,5 +40,10 @@ urlpatterns = [
     # url(r'^xadmin/', xadmin.site.urls),
     url(r'doc/', include_docs_urls(title='yanding Api')),
     url(r'^login/', obtain_jwt_token),
-    url(r'^', include(router.urls))
+
+    url(r'^', include(router.urls)),
+    url(r'^ca/(?P<pk>[^/.]+)/$', CategoryViewSet.as_view(
+        { 'get':'list',
+          'post':'create'}
+))
 ]
