@@ -17,8 +17,16 @@ class BlogSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
 
-    update_time = serializers.DateField(read_only=True)
-    # add_time = serializers.DateField(read_only=True)
+
+    class Meta:
+        model = Blog
+        fields = ('category','content','title','user')
+
+class BlogDetailSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
     class Meta:
         model = Blog
         fields = '__all__'

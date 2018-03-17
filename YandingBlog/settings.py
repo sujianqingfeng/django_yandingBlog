@@ -51,8 +51,8 @@ INSTALLED_APPS = [
     'like.apps.LikeConfig'
 ]
 
-AUTHENTICATION_BACKENDS = (
-    'user.views.CustomBackend',)
+# AUTHENTICATION_BACKENDS = (
+#     'user.views.CustomBackend',)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -14,7 +14,7 @@ class LikeCreateSerializer(serializers.ModelSerializer):
         model = Like
         validators = UniqueTogetherValidator(
             queryset=Like.objects.all(),
-            fields=['user', 'bolg'],
+            fields=['user', 'blog'],
             message='收藏了'
         )
         fields = ('user','blog','id')

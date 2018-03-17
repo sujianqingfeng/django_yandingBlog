@@ -25,7 +25,7 @@ class LikeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin,mixins.ListM
     authentication_classes = (SessionAuthentication,JSONWebTokenAuthentication)
 
     def get_queryset(self):
-        return Like.objects.all(user=self.request.user)
+        return Like.objects.filter(user=self.request.user)
 
     def get_serializer_class(self):
         if self.action == 'list':
