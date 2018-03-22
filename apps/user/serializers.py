@@ -6,19 +6,19 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-class UserRegisterSerializer(serializers.ModelSerializer):
 
+class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ('username','phone','password')
+        fields = ('username', 'phone', 'password')
 
 
 class UserSerializer(serializers.ModelSerializer):
-
-    email = serializers.EmailField(required=False,help_text='邮件')
+    email = serializers.EmailField(required=False, help_text='邮件')
+    sex = serializers.ChoiceField(choices=User.SEX_TYPE)
 
     class Meta:
         model = User
-        fields = ('username','phone','sex','birthday','email')
+        fields = ('username', 'phone', 'sex', 'birthday', 'email')

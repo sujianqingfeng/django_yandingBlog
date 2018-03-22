@@ -12,39 +12,42 @@ from blog.models import Blog
 from blog.models import Category
 
 
-class BlogSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-
-
-    class Meta:
-        model = Blog
-        fields = ('category','content','title','user')
-
-class BlogDetailSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
-
-    class Meta:
-        model = Blog
-        fields = '__all__'
-
-
 class CategoryCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Category
-        fields = ('name','user','id')
+        fields = ('name', 'user', 'id')
 
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     update_time = serializers.DateField(read_only=True)
     add_time = serializers.DateField(read_only=True)
+
     class Meta:
         model = Category
+        fields = '__all__'
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+
+    class Meta:
+        model = Blog
+        fields = ('category', 'content', 'title', 'user')
+
+
+class BlogDetailSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    category = CategoryCreateSerializer()
+
+    class Meta:
+        model = Blog
         fields = '__all__'
 
 

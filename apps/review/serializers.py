@@ -10,4 +10,7 @@ class ReviewSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ('user','blog', 'content')
+
+
+

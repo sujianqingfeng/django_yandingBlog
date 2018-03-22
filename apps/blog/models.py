@@ -26,6 +26,7 @@ class Category(BaseModel):
         verbose_name_plural = verbose_name
 
 
+
 class Blog(BaseModel):
     user = models.ForeignKey(User, verbose_name='用户',help_text='用户')
     category = models.ForeignKey(Category, verbose_name='类别',help_text='类别')
@@ -33,6 +34,18 @@ class Blog(BaseModel):
     title = models.TextField(null=False, blank=False, verbose_name="标题",help_text='标题')
     num = models.IntegerField(null=True,blank=True,default=0,verbose_name='数量',help_text='数量')
 
+
     class Meta:
         verbose_name = '博客'
         verbose_name_plural = verbose_name
+
+
+class Tag(BaseModel):
+    blog = models.ForeignKey(Blog, verbose_name='博客', help_text='博客')
+    user = models.ForeignKey(User, verbose_name='用户', help_text='用户')
+    name = models.TextField(null=False, blank=False, verbose_name='标签', help_text='标签名字')
+
+    class Meta:
+        verbose_name = '标签'
+        verbose_name_plural = verbose_name
+
