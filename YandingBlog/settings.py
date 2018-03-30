@@ -96,7 +96,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'PORT': '3307',
         'OPTIONS': {'init_command': 'SET default_storage_engine=INNODB;'}
     }
 }
@@ -139,6 +139,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication'
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
     )
 }
 

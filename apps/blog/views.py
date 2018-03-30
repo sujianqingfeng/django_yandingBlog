@@ -65,8 +65,16 @@ class BlogViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.Upda
         else:
             return Blog.objects.all()
 
+    def get_permissions(self):
+        if self.action == 'blog_list':
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+
+        return [premission() for premission in permission_classes]
+
     @detail_route(methods=['get'])
-    def blog_list(self,request, pk=None):
+    def blog_list(self, request, pk=None):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -93,7 +101,6 @@ class CategoryViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.
     修改类别
     '''
 
-    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
     authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
 
     def get_queryset(self):
@@ -108,6 +115,14 @@ class CategoryViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.
             return CategoryCreateSerializer
         else:
             return CategoryDetailSerializer
+
+    def get_permissions(self):
+        if self.action == 'category_list':
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+
+        return [premission() for premission in permission_classes]
 
     @detail_route(methods=['get'])
     def category_list(self, request, pk=None):

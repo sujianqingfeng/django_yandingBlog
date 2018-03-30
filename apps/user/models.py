@@ -25,6 +25,7 @@ class User(AbstractUser):
     sex = models.IntegerField(choices=SEX_TYPE, default=3, verbose_name='性别', help_text='性别: 1(男),2(女),3(未知)')
     phone = models.CharField(null=True, blank=True, max_length=11, verbose_name="手机", help_text='手机')
     icon = models.CharField(null=True, blank=True, max_length=100, verbose_name="头像", help_text='头像')
+    desc = models.CharField(null=True, blank=True, max_length=100, verbose_name="描述", help_text='描述')
 
     class Meta:
         verbose_name = '用户'

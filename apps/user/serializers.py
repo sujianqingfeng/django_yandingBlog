@@ -15,6 +15,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'phone', 'password')
 
 
+class UserIconSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('icon',)
+
+
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False, help_text='邮件')
     sex = serializers.ChoiceField(choices=User.SEX_TYPE)
