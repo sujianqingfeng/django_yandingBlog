@@ -16,9 +16,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserIconSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = User
-            fields = ('icon',)
+    class Meta:
+        model = User
+        fields = ('icon',)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -27,4 +27,4 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'phone', 'sex', 'birthday', 'email')
+        fields = ('username', 'phone', 'sex', 'birthday', 'email', 'desc', 'id')
