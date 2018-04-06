@@ -44,8 +44,6 @@ class UserViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
     部分修改
     '''
 
-    # authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
-
     def get_object(self):
         return self.request.user
 
@@ -54,7 +52,6 @@ class UserViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
             permission_classes = []
         else:
             permission_classes = [permissions.IsAuthenticated]
-
         return [premission() for premission in permission_classes]
 
     def get_serializer_class(self):
@@ -62,6 +59,16 @@ class UserViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
             return UserRegisterSerializer
         else:
             return UserSerializer
+
+    # def get_authenticators(self):
+    #
+    #     action = self.action_map['post']
+    #
+    #     if action == 'create' or action == 'retrieve':
+    #         authentication_classes = []
+    #     else:
+    #         authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
+    #     return [auth() for auth in authentication_classes]
 
     def get_queryset(self):
         return User.objects.all()
