@@ -13,7 +13,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from .serializers import UserRegisterSerializer, UserSerializer
+from .serializers import UserRegisterSerializer, UserGetSerializer, UserPostSerializer
 
 User = get_user_model()
 
@@ -59,8 +59,10 @@ class UserViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
     def get_serializer_class(self):
         if self.action == 'create':
             return UserRegisterSerializer
+        elif self.action == 'get':
+            return UserGetSerializer
         else:
-            return UserSerializer
+            return UserPostSerializer
 
     def get_queryset(self):
         return User.objects.all()

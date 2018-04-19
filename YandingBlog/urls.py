@@ -8,7 +8,7 @@ from rest_framework.routers import DefaultRouter
 from django.conf.urls.static import static
 from django.conf import settings
 
-from blog.views import BlogViewSet, CategoryViewSet
+from blog.views import BlogViewSet, CategoryViewSet,BlogImgViewSet
 from user.views import UserViewset
 from review.views import ReviewViewSet
 from like.views import LikeViewSet
@@ -20,6 +20,7 @@ router.register(r'category', CategoryViewSet, base_name='categorys')
 router.register(r'blogs', BlogViewSet, base_name='bolgs')
 router.register(r'reviews', ReviewViewSet, base_name='reviews')
 router.register(r'like', LikeViewSet, base_name='like')
+router.register(r'img', BlogImgViewSet, base_name='img')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

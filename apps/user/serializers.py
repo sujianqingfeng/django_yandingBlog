@@ -15,18 +15,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'phone', 'password')
 
 
-class UserIconSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('icon',)
-
-
-class UserSerializer(serializers.ModelSerializer):
+class UserGetSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False, help_text='邮件')
     sex = serializers.ChoiceField(choices=User.SEX_TYPE)
 
     username = serializers.CharField(read_only=True)
-
 
     def get_sex(self, obj):
         return obj.get_sex_display()
@@ -35,4 +28,14 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'phone', 'sex', 'birthday', 'email', 'desc', 'id', 'icon','github','other_link')
+        fields = ('username', 'phone', 'sex', 'birthday', 'email', 'desc', 'id', 'icon', 'github', 'other_link')
+
+
+class UserPostSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=False, help_text='邮件')
+    sex = serializers.ChoiceField(choices=User.SEX_TYPE)
+    username = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'phone', 'sex', 'birthday', 'email', 'desc', 'id', 'icon', 'github', 'other_link')
