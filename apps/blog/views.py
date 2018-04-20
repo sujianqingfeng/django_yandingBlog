@@ -14,7 +14,7 @@ from rest_framework import status
 from rest_framework.settings import api_settings
 
 from utils.permission import IsOwnerOrReadOnly
-from .models import Blog, Category
+from .models import Blog, Category,Image
 from .serializers import BlogSerializer, CategoryCreateSerializer, CategoryDetailSerializer, BlogDetailSerializer, \
     BlogListImgSerializer
 from .filters import BlogFilter
@@ -147,10 +147,10 @@ class BlogImgViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     '''
 
     authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
-    queryset = Category.objects.all()
+    queryset = Image.objects.all()
     serializer_class = BlogListImgSerializer
 
-    # parser_classes = (MultiPartParser, FileUploadParser,)
+    parser_classes = (MultiPartParser, FileUploadParser,)
 
     def get_permissions(self):
         permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
