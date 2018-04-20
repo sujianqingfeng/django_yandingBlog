@@ -38,6 +38,29 @@ class BlogSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
+    category = serializers.CharField(required=True)
+
+
+
+    def set_category(self, obj):
+        return obj.get_sex_display()
+
+    def get_category(self, obj):
+        return obj.get_sex_display()
+
+
+    def create(self, validated_data):
+        category = validated_data.get('category')
+        content = validated_data.get('content')
+        title = validated_data.get('title')
+
+        user = self.context['request'].user
+        user_id = self.context['request'].user.id
+        if category.isdigit():
+            return Blog.objects.create(user_id=user_id, category_id=category, title=title, content=content)
+        else:
+            category_instance = Category.objects.create(name=category,user=user)
+            return Blog.objects.create(user_id=user_id,category=category_instance, title=title, content=content)
 
     class Meta:
         model = Blog
@@ -70,10 +93,10 @@ class BlogListImgSerializer(serializers.Serializer):
     imgs = serializers.ListField(
         child=serializers.FileField(max_length=100000,
                                     allow_empty_file=False,
-                                    use_url=True),write_only=True
+                                    use_url=True), write_only=True
     )
     blog_imgs = serializers.ListField(
-        child=serializers.CharField(max_length=100000,),read_only=True
+        child=serializers.CharField(max_length=100000, ), read_only=True
     )
 
     def create(self, validated_data):
@@ -83,8 +106,4 @@ class BlogListImgSerializer(serializers.Serializer):
             image = Image.objects.create(url=url, user=User.objects.get(id=self.context['request'].user.id))
             blog = BlogImgSerializer(image, context=self.context)
             images.append(blog.data['url'])
-        return {'blog_imgs':images}
-
-
-if __name__ == '__main__':
-    pass
+        return {'blog_imgs': images}

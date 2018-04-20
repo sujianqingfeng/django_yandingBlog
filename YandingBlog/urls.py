@@ -20,7 +20,7 @@ router.register(r'category', CategoryViewSet, base_name='categorys')
 router.register(r'blogs', BlogViewSet, base_name='bolgs')
 router.register(r'reviews', ReviewViewSet, base_name='reviews')
 router.register(r'like', LikeViewSet, base_name='like')
-router.register(r'img', BlogImgViewSet, base_name='img')
+router.register(r'img_upload', BlogImgViewSet, base_name='img_upload')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
