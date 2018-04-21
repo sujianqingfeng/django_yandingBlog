@@ -14,9 +14,9 @@ from rest_framework import status
 from rest_framework.settings import api_settings
 
 from utils.permission import IsOwnerOrReadOnly
-from .models import Blog, Category,Image
+from .models import Blog, Category, Image
 from .serializers import BlogSerializer, CategoryCreateSerializer, CategoryDetailSerializer, BlogDetailSerializer, \
-    BlogListImgSerializer
+    BlogListImgSerializer, BlogUpdateSerializer
 from .filters import BlogFilter
 
 User = get_user_model()
@@ -31,7 +31,7 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class BlogViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.UpdateModelMixin,
+class BlogViewSet(mixins.DestroyModelMixin,mixins.RetrieveModelMixin,
                   viewsets.GenericViewSet):
     '''
     list:
@@ -59,6 +59,8 @@ class BlogViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.Upda
     def get_serializer_class(self):
         if self.action == 'blog_list':
             return BlogDetailSerializer
+        elif self.action == 'partial_update' or self.action == 'update':
+            return BlogUpdateSerializer
         else:
             return BlogSerializer
 
@@ -67,7 +69,7 @@ class BlogViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.Upda
             user = User.objects.filter(id=self.kwargs['pk'])
             return Blog.objects.filter(user=user)
         else:
-            return Blog.objects.all()
+            return Blog.objects.get(id=self.kwargs['pk'])
 
     def get_permissions(self):
         if self.action == 'blog_list':
@@ -76,6 +78,41 @@ class BlogViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.Upda
             permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
         return [premission() for premission in permission_classes]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    """
+        Update a model instance.
+        """
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_queryset()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(status.HTTP_200_OK)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
 
     @detail_route(methods=['get'])
     def blog_list(self, request, pk=None):
