@@ -31,7 +31,7 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class BlogViewSet(mixins.DestroyModelMixin,mixins.RetrieveModelMixin,
+class BlogViewSet(mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
     '''
     list:
@@ -57,7 +57,7 @@ class BlogViewSet(mixins.DestroyModelMixin,mixins.RetrieveModelMixin,
     ordering_fields = '__all__'
 
     def get_serializer_class(self):
-        if self.action == 'blog_list':
+        if self.action == 'blog_list' or self.action == 'retrieve':
             return BlogDetailSerializer
         elif self.action == 'partial_update' or self.action == 'update':
             return BlogUpdateSerializer
@@ -84,7 +84,7 @@ class BlogViewSet(mixins.DestroyModelMixin,mixins.RetrieveModelMixin,
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
     def perform_create(self, serializer):
         serializer.save()
@@ -105,7 +105,7 @@ class BlogViewSet(mixins.DestroyModelMixin,mixins.RetrieveModelMixin,
             # forcibly invalidate the prefetch cache on the instance.
             instance._prefetched_objects_cache = {}
 
-        return Response(status.HTTP_200_OK)
+        return Response(serializer.data,status.HTTP_200_OK)
 
     def perform_update(self, serializer):
         serializer.save()
@@ -113,6 +113,12 @@ class BlogViewSet(mixins.DestroyModelMixin,mixins.RetrieveModelMixin,
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
+
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = Blog.objects.get(id=self.kwargs['pk'])
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     @detail_route(methods=['get'])
     def blog_list(self, request, pk=None):

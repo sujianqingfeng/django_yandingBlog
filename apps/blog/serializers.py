@@ -12,6 +12,7 @@ from rest_framework import serializers
 from django.db.models import Q
 
 from blog.models import Blog, Image, Category
+from user.serializers import UserGetSerializer
 
 User = get_user_model()
 
@@ -38,6 +39,7 @@ class BlogSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
+    id = serializers.IntegerField(read_only=True)
     category = serializers.CharField(required=True, write_only=True)
 
     def create(self, validated_data):
@@ -61,7 +63,7 @@ class BlogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ('category', 'content', 'title', 'user')
+        fields = ('id','category', 'content', 'title', 'user')
         extra_kwargs = {
             'category': {'write_only': True},
             'content': {'write_only': True},
@@ -69,11 +71,13 @@ class BlogSerializer(serializers.ModelSerializer):
         }
 
 
+
 class BlogUpdateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
-    category = serializers.CharField()
+    id = serializers.IntegerField(read_only=True)
+    category = serializers.CharField(write_only=True)
 
     def update(self, instance, validated_data):
         instance.content = validated_data.get('content', instance.content)
@@ -110,7 +114,7 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ('category', 'content', 'title', 'user')
+        fields = ('id','category', 'content', 'title', 'user')
         extra_kwargs = {
             'category': {'write_only': True},
             'content': {'write_only': True},
@@ -118,10 +122,9 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
         }
 
 
+
 class BlogDetailSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(
-        default=serializers.CurrentUserDefault()
-    )
+    user = UserGetSerializer()
     category = CategoryCreateSerializer()
 
     class Meta:
