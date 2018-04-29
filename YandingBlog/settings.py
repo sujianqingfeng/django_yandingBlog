@@ -33,7 +33,9 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'blog.apps.BlogConfig',
     'review.apps.ReviewConfig',
-    'like.apps.LikeConfig'
+    'like.apps.LikeConfig',
+    'about.apps.AboutConfig',
+    'friend.apps.FriendConfig'
 ]
 
 # AUTHENTICATION_BACKENDS = (
