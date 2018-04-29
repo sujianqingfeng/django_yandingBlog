@@ -13,6 +13,7 @@ from user.views import UserViewset
 from review.views import ReviewViewSet
 from like.views import LikeViewSet
 from friend.views import FriendViewSet
+from about.views import AboutViewSet
 
 router = DefaultRouter()
 
@@ -23,6 +24,7 @@ router.register(r'reviews', ReviewViewSet, base_name='reviews')
 router.register(r'like', LikeViewSet, base_name='like')
 router.register(r'img_upload', BlogImgViewSet, base_name='img_upload')
 router.register(r'friend', FriendViewSet, base_name='friend')
+router.register(r'about',AboutViewSet,base_name='about')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
