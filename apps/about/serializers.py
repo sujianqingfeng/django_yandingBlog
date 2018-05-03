@@ -7,4 +7,5 @@ class AboutSeializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = About
-        fields = ('user','content')
+        fields = ('user','content','add_time')
+        read_only_fields = ('add_time',)
