@@ -35,7 +35,7 @@ class FriendViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.G
         return FriendCreateSerializer
 
     def get_permissions(self):
-        if self.action == 'blog_list':
+        if self.action == 'links':
             permission_classes = []
         else:
             permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
