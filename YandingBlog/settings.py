@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     'review.apps.ReviewConfig',
     'like.apps.LikeConfig',
     'about.apps.AboutConfig',
-    'friend.apps.FriendConfig'
+    'friend.apps.FriendConfig',
+    'category.apps.CategoryConfig',
+    'image.apps.ImageConfig'
 ]
 
 # AUTHENTICATION_BACKENDS = (
@@ -142,6 +144,10 @@ REST_FRAMEWORK = {
     # 'DEFAULT_RENDERER_CLASSES': (
     #     'rest_framework.renderers.JSONRenderer',
     # )
+
+    'EXCEPTION_HANDLER': (
+        'apps.util.exception.custom_exception_handler'
+    )
 }
 
 CORS_ALLOW_CREDENTIALS = True

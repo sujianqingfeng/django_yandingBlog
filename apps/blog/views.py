@@ -1,23 +1,18 @@
-from rest_framework import mixins
-from rest_framework import viewsets
-from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
-from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from django.contrib.auth import get_user_model
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.decorators import list_route, detail_route
+from rest_framework import mixins
 from rest_framework import status
-from rest_framework.settings import api_settings
+from rest_framework import viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from utils.permission import IsOwnerOrReadOnly
-from .models import Blog, Category, Image
-from .serializers import BlogSerializer, CategoryCreateSerializer, CategoryDetailSerializer, BlogDetailSerializer, \
-    BlogListImgSerializer, BlogUpdateSerializer
 from .filters import BlogFilter
+from .models import Blog
+from .serializers import BlogSerializer, BlogDetailSerializer, BlogUpdateSerializer, BlogAdminSerializer
 
 User = get_user_model()
 
@@ -31,8 +26,7 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class BlogViewSet(mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet):
+class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     '''
     list:
     获取博客列表
@@ -61,6 +55,8 @@ class BlogViewSet(mixins.DestroyModelMixin,
             return BlogDetailSerializer
         elif self.action == 'partial_update' or self.action == 'update':
             return BlogUpdateSerializer
+        elif self.action == 'list':
+            return BlogAdminSerializer
         else:
             return BlogSerializer
 
@@ -68,6 +64,8 @@ class BlogViewSet(mixins.DestroyModelMixin,
         if self.action == 'blog_list':
             user = User.objects.filter(id=self.kwargs['pk'])
             return Blog.objects.filter(user=user)
+        elif self.action == 'list' or self.action == 'destroy':
+            return Blog.objects.all()
         else:
             return Blog.objects.get(id=self.kwargs['pk'])
 
@@ -84,7 +82,7 @@ class BlogViewSet(mixins.DestroyModelMixin,
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def perform_create(self, serializer):
         serializer.save()
@@ -101,11 +99,9 @@ class BlogViewSet(mixins.DestroyModelMixin,
         self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
             instance._prefetched_objects_cache = {}
 
-        return Response(serializer.data,status.HTTP_200_OK)
+        return Response(serializer.data, status.HTTP_200_OK)
 
     def perform_update(self, serializer):
         serializer.save()
@@ -113,7 +109,6 @@ class BlogViewSet(mixins.DestroyModelMixin,
     def partial_update(self, request, *args, **kwargs):
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
-
 
     def retrieve(self, request, *args, **kwargs):
         instance = Blog.objects.get(id=self.kwargs['pk'])
@@ -130,71 +125,3 @@ class BlogViewSet(mixins.DestroyModelMixin,
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
-
-class CategoryViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.UpdateModelMixin,
-                      viewsets.GenericViewSet):
-    '''
-    category_list:
-    得到所有类别
-
-    create:
-    创建类别
-
-    detele:
-    删除类别
-
-    update:
-    修改类别
-    '''
-
-    authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
-
-    def get_queryset(self):
-        if self.action == 'category_list':
-            user = User.objects.filter(id=self.kwargs['pk'])
-            return Category.objects.filter(user=user)
-        else:
-            return Category.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return CategoryCreateSerializer
-        else:
-            return CategoryDetailSerializer
-
-    def get_permissions(self):
-        if self.action == 'category_list':
-            permission_classes = []
-        else:
-            permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-
-        return [premission() for premission in permission_classes]
-
-    @detail_route(methods=['get'])
-    def category_list(self, request, pk=None):
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
-
-class BlogImgViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
-    '''
-    create:
-    创建图片
-    '''
-
-    authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
-    queryset = Image.objects.all()
-    serializer_class = BlogListImgSerializer
-
-    parser_classes = (MultiPartParser, FileUploadParser,)
-
-    def get_permissions(self):
-        permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-        return [premission() for premission in permission_classes]

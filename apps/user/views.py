@@ -13,7 +13,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
-from .serializers import UserRegisterSerializer, UserGetSerializer, UserPostSerializer
+from apps.user.serializers import UserRegisterSerializer, UserGetSerializer, UserPostSerializer
 
 User = get_user_model()
 

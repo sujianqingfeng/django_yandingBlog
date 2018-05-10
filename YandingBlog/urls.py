@@ -8,7 +8,9 @@ from rest_framework.routers import DefaultRouter
 from django.conf.urls.static import static
 from django.conf import settings
 
-from blog.views import BlogViewSet, CategoryViewSet, BlogImgViewSet
+from blog.views import BlogViewSet
+from category.views import CategoryViewSet
+from image.views import BlogImgViewSet
 from user.views import UserViewset
 from review.views import ReviewViewSet
 from like.views import LikeViewSet
