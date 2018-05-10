@@ -70,7 +70,7 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
             return Blog.objects.get(id=self.kwargs['pk'])
 
     def get_permissions(self):
-        if self.action == 'blog_list':
+        if self.action == 'blog_list' or self.action=='retrieve':
             permission_classes = []
         else:
             permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
