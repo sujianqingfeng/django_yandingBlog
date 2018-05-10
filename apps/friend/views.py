@@ -3,19 +3,12 @@ from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-
-
-
 from friend.serializers import FriendCreateSerializer, FriendUpdateSerializer
 from friend.models import Friend
 from utils.permission import IsOwnerOrReadOnly
 
 
 class FriendViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
-
-
-
-
 
     def get_queryset(self):
         # if self.action == 'update' or self.action == 'partial_update':
@@ -42,9 +35,8 @@ class FriendViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.G
 
         return [premission() for premission in permission_classes]
 
-
     @detail_route(methods=['get'])
-    def links   (self,request,pk=None):
+    def links(self, request, pk=None):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
         if page is not None:
