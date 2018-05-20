@@ -146,7 +146,7 @@ REST_FRAMEWORK = {
     # )
 
     'EXCEPTION_HANDLER': (
-        'apps.util.exception.custom_exception_handler'
+        'apps.utils.exception.custom_exception_handler'
     )
 }
 

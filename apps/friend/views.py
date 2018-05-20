@@ -8,14 +8,13 @@ from friend.models import Friend
 from utils.permission import IsOwnerOrReadOnly
 
 
-class FriendViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class FriendViewSet(mixins.CreateModelMixin,mixins.ListModelMixin, mixins.UpdateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
         # if self.action == 'update' or self.action == 'partial_update':
         #     return Friend.objects.get(id=self.kwargs['pk'])
 
-        if self.action == 'links':
-            return Friend.objects.filter(is_delete=False)
+
         return Friend.objects.all()
 
     def get_serializer_class(self):
@@ -23,7 +22,7 @@ class FriendViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.G
         if self.action == 'create':
             return FriendCreateSerializer
         elif self.action == 'update' or self.action == 'partial_update':
-            return FriendUpdateSerializer
+            return FriendCreateSerializer
 
         return FriendCreateSerializer
 

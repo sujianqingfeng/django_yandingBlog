@@ -7,12 +7,12 @@ class FriendCreateSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
 
-    def create(self, validated_data):
-        return Friend.objects.create(is_delete=True,**validated_data)
+    # def create(self, validated_data):
+    #     return Friend.objects.create(is_delete=True,**validated_data)
 
     class Meta:
         model = Friend
-        fields = ('user', 'link', 'desc', 'icon', 'title')
+        fields = ('user', 'link', 'desc', 'icon', 'title','id')
 
 
 
