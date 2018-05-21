@@ -4,7 +4,7 @@ from rest_framework import filters
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -115,7 +115,7 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    @detail_route(methods=['get'])
+    @action(methods=['get'],detail=False)
     def blog_list(self, request, pk=None):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)

@@ -9,4 +9,4 @@ class AboutSeializer(serializers.ModelSerializer):
     class Meta:
         model = About
         fields = ('user','content','add_time')
-        read_only_fields=('add_time',)
+

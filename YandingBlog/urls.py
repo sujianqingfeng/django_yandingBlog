@@ -1,21 +1,19 @@
-from django.conf.urls import url, include
+from django.conf import settings
+from django.conf.urls import include, re_path
+from django.conf.urls.static import static
 from django.contrib import admin
 from rest_framework.documentation import include_docs_urls
-# from rest_framework.authtoken import views
-# import xadmin
-from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework.routers import DefaultRouter
-from django.conf.urls.static import static
-from django.conf import settings
+from rest_framework_jwt.views import obtain_jwt_token
 
+from about.views import AboutViewSet
 from blog.views import BlogViewSet
 from category.views import CategoryViewSet
-from image.views import BlogImgViewSet
-from user.views import UserViewset
-from review.views import ReviewViewSet
-from like.views import LikeViewSet
 from friend.views import FriendViewSet
-from about.views import AboutViewSet
+from image.views import BlogImgViewSet
+from like.views import LikeViewSet
+from review.views import ReviewViewSet
+from user.views import UserViewset
 
 router = DefaultRouter()
 
@@ -26,15 +24,14 @@ router.register(r'reviews', ReviewViewSet, base_name='reviews')
 router.register(r'like', LikeViewSet, base_name='like')
 router.register(r'img_upload', BlogImgViewSet, base_name='img_upload')
 router.register(r'friend', FriendViewSet, base_name='friend')
-router.register(r'about',AboutViewSet,base_name='about')
+router.register(r'about', AboutViewSet, base_name='about')
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # url(r'^xadmin/', xadmin.site.urls),
-    url(r'doc/', include_docs_urls(title='yanding Api')),
-    url(r'^login/', obtain_jwt_token),
-    url(r'^', include(router.urls)),
+    re_path(r'^admin/', admin.site.urls),
+    re_path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    re_path(r'doc/', include_docs_urls(title='yanding Api')),
+    re_path(r'^login/', obtain_jwt_token),
+    re_path(r'^', include(router.urls)),
 ]
 
 if settings.DEBUG:

@@ -1,11 +1,13 @@
-from rest_framework import viewsets,mixins
+from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 
 from about.models import About
 from about.serializers import AboutSeializer
 from utils.permission import IsOwnerOrReadOnly
 
-class AboutViewSet(mixins.CreateModelMixin,mixins.UpdateModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+
+class AboutViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin,
+                   viewsets.GenericViewSet):
 
     def get_permissions(self):
         if self.action == 'retrieve':

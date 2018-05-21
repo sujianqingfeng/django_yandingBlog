@@ -1,19 +1,19 @@
 from rest_framework import mixins, viewsets
-from rest_framework.decorators import list_route, detail_route
-from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from friend.serializers import FriendCreateSerializer, FriendUpdateSerializer
 from friend.models import Friend
+from friend.serializers import FriendCreateSerializer
 from utils.permission import IsOwnerOrReadOnly
 
 
-class FriendViewSet(mixins.CreateModelMixin,mixins.ListModelMixin, mixins.UpdateModelMixin,mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class FriendViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet):
 
     def get_queryset(self):
         # if self.action == 'update' or self.action == 'partial_update':
         #     return Friend.objects.get(id=self.kwargs['pk'])
-
 
         return Friend.objects.all()
 
@@ -34,7 +34,7 @@ class FriendViewSet(mixins.CreateModelMixin,mixins.ListModelMixin, mixins.Update
 
         return [premission() for premission in permission_classes]
 
-    @detail_route(methods=['get'])
+    @action(methods=['get'], detail=False)
     def links(self, request, pk=None):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
