@@ -3,8 +3,11 @@
 
 
 from django.db.models.signals import post_save
+from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
+
+from apps.utils.request import get_ip_address_from_request
 
 User = get_user_model()
 
@@ -15,3 +18,16 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         password = instance.password
         instance.set_password(password)
         instance.save()
+
+
+@receiver(user_logged_in)
+def update_last_login_ip(sender, user, request, **kwargs):
+    """
+    更新用户最后一次登陆的IP地址
+    """
+    ip = get_ip_address_from_request(request)
+    if ip:
+        user.last_login_ip = ip
+        user.save()
+
+# user_logged_in.connect(update_last_login_ip)

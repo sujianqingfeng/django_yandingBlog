@@ -9,6 +9,7 @@ django-crispy-forms==1.7.2
 django-filter==2.0.0.dev1
 django-formtools==2.1
 django-import-export==1.0.1
+django-ipware==2.1.0
 django-reversion==2.0.13
 djangorestframework==3.8.2
 djangorestframework-jwt==1.11.0

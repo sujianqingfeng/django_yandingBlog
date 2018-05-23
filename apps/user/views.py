@@ -10,7 +10,6 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
-from rest_framework.decorators import list_route, detail_route
 from rest_framework.response import Response
 
 from apps.user.serializers import UserRegisterSerializer, UserGetSerializer, UserPostSerializer
