@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'django_filters',
+    'rest_auth',
     'user.apps.UserConfig',
     'blog.apps.BlogConfig',
     'review.apps.ReviewConfig',
@@ -180,6 +181,21 @@ CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'Pragma',
 )
+
+
+# django-rest-auth settings
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'users.serializers.UserDetailsSerializer',
+}
+SOCIAL_LOGIN_GITHUB_CALLBACK_URL = os.environ.get(
+    'SOCIAL_LOGIN_GITHUB_CALLBACK_URL',
+    'http://localhost:8000/social-auth/github/loginsuccess'
+)
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'users.serializers.UserRegistrationSerializer',
+}
+
 
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':

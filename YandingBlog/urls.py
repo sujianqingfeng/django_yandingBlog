@@ -13,7 +13,7 @@ from friend.views import FriendViewSet
 from image.views import BlogImgViewSet
 from like.views import LikeViewSet
 from review.views import ReviewViewSet
-from user.views import UserViewset
+from user.views import UserViewset,RegisterViewCustom
 
 router = DefaultRouter()
 
@@ -29,6 +29,8 @@ router.register(r'about', AboutViewSet, base_name='about')
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    re_path(r'^rest-auth/', include('rest_auth.urls')),
+    re_path(r'^rest-auth/registration/$', RegisterViewCustom.as_view(), name='rest_register'),
     re_path(r'doc/', include_docs_urls(title='yanding Api')),
     re_path(r'^login/', obtain_jwt_token),
     re_path(r'^', include(router.urls)),

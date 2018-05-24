@@ -11,10 +11,22 @@ from rest_framework import permissions
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.response import Response
+from rest_auth.registration.views import (
+    LoginView, RegisterView, SocialConnectView, SocialLoginView)
+
 
 from apps.user.serializers import UserRegisterSerializer, UserGetSerializer, UserPostSerializer
 
 User = get_user_model()
+
+
+
+class RegisterViewCustom(RegisterView):
+    """
+    注册视图取消authentication_class一次避免CSRF校验
+    """
+    authentication_classes = ()
+
 
 
 class CustomBackend(ModelBackend):
