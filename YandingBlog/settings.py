@@ -1,14 +1,11 @@
 import os, sys
 import datetime
 
-
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, BASE_DIR)
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
-
 
 SECRET_KEY = '$5fv&vyka%klw)wangxz#w_ixwja!slbnfettguf+1hd@pb0pv'
 
@@ -25,12 +22,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # 3rd apps
     'rest_framework',
     'crispy_forms',
     'corsheaders',
     'rest_framework.authtoken',
     'django_filters',
-    'rest_auth',
+
+
+    # my apps
     'user.apps.UserConfig',
     'blog.apps.BlogConfig',
     'review.apps.ReviewConfig',
@@ -40,6 +42,8 @@ INSTALLED_APPS = [
     'category.apps.CategoryConfig',
     'image.apps.ImageConfig'
 ]
+
+
 
 # AUTHENTICATION_BACKENDS = (
 #     'user.views.CustomBackend',)
@@ -152,7 +156,7 @@ REST_FRAMEWORK = {
         'apps.utils.exception.custom_exception_handler'
     )
 }
-
+# 跨域设置
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
@@ -182,20 +186,7 @@ CORS_ALLOW_HEADERS = (
     'Pragma',
 )
 
-
-# django-rest-auth settings
-REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'users.serializers.UserDetailsSerializer',
-}
-SOCIAL_LOGIN_GITHUB_CALLBACK_URL = os.environ.get(
-    'SOCIAL_LOGIN_GITHUB_CALLBACK_URL',
-    'http://localhost:8000/social-auth/github/loginsuccess'
-)
-
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'users.serializers.UserRegistrationSerializer',
-}
-
+# jwt setting
 
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
