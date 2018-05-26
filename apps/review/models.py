@@ -1,18 +1,18 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-
+from django_comments.abstracts import CommentAbstractModel
+from mptt.models import MPTTModel, TreeForeignKey
 
 from apps.base.base_model import BaseModel
-from blog.models import Blog
+
 
 User = get_user_model()
 
-class Review(BaseModel):
-    user = models.ForeignKey(User,on_delete=models.CASCADE, verbose_name='用户')
-    blog = models.ForeignKey(Blog,on_delete=models.CASCADE,verbose_name='博客')
-    content = models.CharField(max_length=700,null=False,blank=False,verbose_name='评论内容')
 
+class Review(MPTTModel, CommentAbstractModel):
+    parent = TreeForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='上级回复',
+                            related_name='children')
 
-
-    class Meta:
+    class Meta(CommentAbstractModel.Meta):
         verbose_name = "评论"
+        verbose_name_plural = verbose_name

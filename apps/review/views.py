@@ -1,12 +1,16 @@
-from rest_framework import viewsets
-from rest_framework import mixins
+from rest_framework import viewsets,mixins,permissions
 
 
 from review.models import Review
-from review.serializers import ReviewSerializers
+from review.serializers import ReviewCreationSerializer
 
-class ReviewViewSet(mixins.ListModelMixin,mixins.CreateModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewSet):
+class ReviewViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
 
-    serializer_class = ReviewSerializers
+    serializer_class = ReviewCreationSerializer
     queryset = Review.objects.all()
+    permission_classes = [permissions.IsAuthenticated, ]
 
+
+    def perform_create(self, serializer):
+        parent_review = serializer.validated_data.get('parent')
+        review = serializer.save(user=self.request.user, parent=parent_review)

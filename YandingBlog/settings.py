@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django.contrib.sites',
+    'django.contrib.sites',
 
     # 3rd apps
     'rest_framework',
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'image.apps.ImageConfig'
 ]
 
-
+SITE_ID =1
 
 # AUTHENTICATION_BACKENDS = (
 #     'user.views.CustomBackend',)

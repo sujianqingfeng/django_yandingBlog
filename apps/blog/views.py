@@ -13,6 +13,7 @@ from utils.permission import IsOwnerOrReadOnly
 from .filters import BlogFilter
 from .models import Blog
 from .serializers import BlogSerializer, BlogDetailSerializer, BlogUpdateSerializer, BlogAdminSerializer
+from review.serializers import TreeReviewSerializer
 
 User = get_user_model()
 
@@ -125,3 +126,15 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    @action(methods=['get'],detail=True,serializer_class=TreeReviewSerializer,permission_classes=[])
+    def reviews(self,request,pk=None):
+        blog = self.get_object()
+        reviews = blog.review.all()
+        page = self.pagination_class(reviews)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(reviews, many=True, context={'request': request})
+        return Response(serializer.data)
+

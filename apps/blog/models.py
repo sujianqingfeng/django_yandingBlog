@@ -1,11 +1,12 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.auth import get_user_model
 
 from apps.base.base_model import BaseModel
 from category.models import Category
+from review.models import Review
 
 User = get_user_model()
-
 
 
 class Blog(BaseModel):
@@ -14,6 +15,12 @@ class Blog(BaseModel):
     content = models.TextField(blank=True, verbose_name='博客正文', help_text='博客正文')
     title = models.TextField(null=False, blank=False, verbose_name="标题", help_text='标题')
     num = models.IntegerField(null=True, blank=True, default=0, verbose_name='数量', help_text='数量')
+    review = GenericRelation(Review,object_id_field='object_pk',content_type_field='content_type',verbose_name='评论')
+
+
+
+
+
 
     class Meta:
         verbose_name = '博客'
