@@ -21,13 +21,12 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 @receiver(user_logged_in)
-def update_last_login_ip(sender, user, request, **kwargs):
+def update_last_login_ip(user, request, **kwargs):
     """
-    更新用户最后一次登陆的IP地址
+    最近登录Ip 这里生成token也会当做登录
     """
     ip = get_ip_address_from_request(request)
     if ip:
         user.last_login_ip = ip
         user.save()
 
-# user_logged_in.connect(update_last_login_ip)

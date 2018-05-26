@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-from allauth.account.adapter import get_adapter
-from allauth.account.utils import setup_user_email
-from rest_auth.registration.serializers import RegisterSerializer
+
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -14,6 +12,12 @@ User = get_user_model()
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+
+    def create(self, validated_data):
+        ip = get_ip_address_from_request(self.context['request'])
+
+        return User.objects.create(**validated_data,ip_joined=ip)
+
 
     class Meta:
         model = User
