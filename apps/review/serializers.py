@@ -7,6 +7,7 @@ from django.contrib.sites.models import Site
 
 
 from review.models import Review
+from blog.models import Blog
 
 
 class FlatReviewSerializer(serializers.ModelSerializer):
@@ -76,7 +77,7 @@ class ReviewCreationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         reivew_id = validated_data.get('object_pk')
         review_ctype = ContentType.objects.get_for_model(
-            Review.objects.get(id=int(reivew_id))
+            Blog.objects.get(id=int(reivew_id))
         )
         site = Site.objects.get_current()
         validated_data['site'] = site
