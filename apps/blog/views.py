@@ -13,7 +13,7 @@ from utils.permission import IsOwnerOrReadOnly
 from .filters import BlogFilter
 from .models import Blog
 from .serializers import BlogSerializer, BlogDetailSerializer, BlogUpdateSerializer, BlogAdminSerializer
-from review.serializers import TreeReviewSerializer
+from review.serializers import TreeReviewSerializer, FlatReviewSerializer
 
 User = get_user_model()
 
@@ -27,26 +27,23 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
+
 class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     '''
     list:
     获取博客列表
-
     retrieve:
     博客详情
-
     create:
     添加博客
-
     update:
     更新博客
-
     destroy:
     删除博客
     '''
     pagination_class = BlogPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
-    filter_class = BlogFilter
+    # filter_class = BlogFilter
     search_fields = ('title')
     ordering = ('add_time',)
     ordering_fields = '__all__'
@@ -63,7 +60,7 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
 
     def get_queryset(self):
         if self.action == 'blog_list':
-            user = User.objects.filter(id=self.kwargs['pk'])
+            user = User.objects.get(id=self.kwargs['pk'])
             return Blog.objects.filter(user=user)
         elif self.action == 'list' or self.action == 'destroy':
             return Blog.objects.all()
@@ -116,7 +113,7 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    @action(methods=['get'],detail=False)
+    @action(methods=['get'],detail=True)
     def blog_list(self, request, pk=None):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
@@ -129,12 +126,11 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
 
     @action(methods=['get'],detail=True,serializer_class=TreeReviewSerializer,permission_classes=[])
     def reviews(self,request,pk=None):
-        blog = self.get_object()
+        blog = Blog.objects.get(id=pk)
         reviews = blog.review.all()
-        page = self.pagination_class(reviews)
+        page = self.paginate_queryset(reviews)
         if page is not None:
             serializer = self.get_serializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
         serializer = self.get_serializer(reviews, many=True, context={'request': request})
         return Response(serializer.data)
-

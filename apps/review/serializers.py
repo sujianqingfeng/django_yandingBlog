@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
-from rest_framework import serializers
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
+from rest_framework import serializers
 
-
-from review.models import Review
 from blog.models import Blog
+from review.models import Review
 
 
 class FlatReviewSerializer(serializers.ModelSerializer):
@@ -28,7 +26,14 @@ class FlatReviewSerializer(serializers.ModelSerializer):
 class TreeReviewSerializer(serializers.ModelSerializer):
     descendants = FlatReviewSerializer(many=True)
     user = serializers.SerializerMethodField()
-    is_liked = serializers.SerializerMethodField()
+
+
+    def get_user(self, obj):
+        user = obj.user
+        return {
+            'id': user.id,
+            'username': user.username,
+        }
 
     class Meta:
         model = Review
@@ -46,16 +51,12 @@ class TreeReviewSerializer(serializers.ModelSerializer):
         )
 
 
-
 class ReviewCreationSerializer(serializers.ModelSerializer):
     """
     仅用于 reply 的创建
     """
     parent_user = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField()
-
-
-
 
     def get_parent_user(self, obj):
         parent = obj.parent
@@ -83,7 +84,6 @@ class ReviewCreationSerializer(serializers.ModelSerializer):
         validated_data['site'] = site
         validated_data['content_type'] = review_ctype
         return super(ReviewCreationSerializer, self).create(validated_data)
-
 
     class Meta:
         model = Review

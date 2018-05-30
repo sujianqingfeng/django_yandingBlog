@@ -153,7 +153,7 @@ REST_FRAMEWORK = {
     # )
 
     'EXCEPTION_HANDLER': (
-        'apps.utils.exception.custom_exception_handler'
+        'utils.exception.custom_exception_handler'
     )
 }
 # 跨域设置
@@ -202,7 +202,7 @@ JWT_AUTH = {
         'rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler',
 
     'JWT_RESPONSE_PAYLOAD_HANDLER':
-        'apps.utils.jwt.jwt_response_payload_handler',
+        'utils.jwt.jwt_response_payload_handler',
 
     'JWT_SECRET_KEY': SECRET_KEY,
     'JWT_GET_USER_SECRET_KEY': None,

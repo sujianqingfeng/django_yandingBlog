@@ -7,7 +7,7 @@ from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 
-from apps.utils.request import get_ip_address_from_request
+from utils.request import get_ip_address_from_request
 
 User = get_user_model()
 

@@ -13,6 +13,10 @@ class BlogFilter(filter.FilterSet):
     '''
 
     title = filter.CharFilter(name='title',lookup_expr='icontains',help_text='标题')
+
+
+    def is_valid(self):
+        return self.is_bound
     class Meta:
         model = Blog
         fields = ['title']
