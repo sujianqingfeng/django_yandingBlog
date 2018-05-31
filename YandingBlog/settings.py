@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'django_filters',
+    'django_comments',
+    'mptt',
 
 
     # my apps
@@ -42,6 +44,8 @@ INSTALLED_APPS = [
     'category.apps.CategoryConfig',
     'image.apps.ImageConfig'
 ]
+
+COMMENTS_APP = 'review'
 
 SITE_ID =1
 

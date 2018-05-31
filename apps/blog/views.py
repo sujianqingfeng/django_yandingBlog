@@ -126,11 +126,13 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
 
     @action(methods=['get'],detail=True,serializer_class=TreeReviewSerializer,permission_classes=[])
     def reviews(self,request,pk=None):
-        blog = Blog.objects.get(id=pk)
+
+        query =TreeReviewSerializer.setup_eager_loading(Blog.objects.all(),prefetch_related=TreeReviewSerializer.PREFETCH_RELATED_FIELDS)
+        blog = query.get(id=pk)
         reviews = blog.review.all()
         page = self.paginate_queryset(reviews)
         if page is not None:
-            serializer = self.get_serializer(page, many=True, context={'request': request})
+            serializer = TreeReviewSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
-        serializer = self.get_serializer(reviews, many=True, context={'request': request})
+        serializer = TreeReviewSerializer(reviews, many=True, context={'request': request})
         return Response(serializer.data)

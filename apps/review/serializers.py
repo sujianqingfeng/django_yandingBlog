@@ -2,31 +2,63 @@
 # encoding: utf-8
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
+from django.db.models import Prefetch
 from rest_framework import serializers
 
 from blog.models import Blog
 from review.models import Review
+from utils.mixins import EagerLoaderMixin
 
 
 class FlatReviewSerializer(serializers.ModelSerializer):
+    review = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField()
+    parent_user = serializers.SerializerMethodField()
+
+    def get_review(self, obj):
+        review = obj.content_object
+        return {
+            'id': review.id,
+            'title': review.title,
+        }
+
+    def get_user(self, obj):
+        user = obj.user
+        return {
+            'id': user.id,
+            'username': user.username,
+        }
+
+    def get_parent_user(self, obj):
+        parent = obj.parent
+        if not parent:
+            return None
+        user = parent.user
+        return {
+            'id': user.id,
+            'username': user.username,
+        }
+
+
     class Meta:
         model = Review
         fields = (
             'id',
             'user',
             'parent_user',
-            'post',
+            'review',
             'submit_date',
             'comment',
-            'like_count',
-            'is_liked',
         )
 
 
-class TreeReviewSerializer(serializers.ModelSerializer):
+class TreeReviewSerializer(serializers.ModelSerializer,EagerLoaderMixin):
     descendants = FlatReviewSerializer(many=True)
     user = serializers.SerializerMethodField()
 
+    PREFETCH_RELATED_FIELDS = [
+        Prefetch('review', queryset=Review.objects.order_by('-submit_date'))
+    ]
 
     def get_user(self, obj):
         user = obj.user
@@ -43,11 +75,9 @@ class TreeReviewSerializer(serializers.ModelSerializer):
             'object_pk',
             'comment',
             'submit_date',
-            'like_count',
             'user',
             'descendants',
             'descendants_count',
-            'is_liked'
         )
 
 

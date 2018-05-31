@@ -14,6 +14,15 @@ class Review(MPTTModel, CommentAbstractModel):
     parent = TreeForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='上级回复',
                             related_name='children')
 
+    def descendants(self):
+        """
+        获取回复的全部子孙回复，按回复时间正序排序
+        """
+        return self.get_descendants().order_by('submit_date')
+
+    def descendants_count(self):
+        return self.get_descendant_count()
+
     @property
     def ctype(self):
         return ContentType.objects.get_for_model(self)

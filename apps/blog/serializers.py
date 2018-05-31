@@ -9,16 +9,11 @@
 """
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from django.db.models import Prefetch
 
 from blog.models import Blog
-from review.models import Review
+from category.models import Category
 from category.serializers import CategoryCreateSerializer
 from user.serializers import UserGetSerializer
-from category.models import Category
-from utils.mixins import EagerLoaderMixin
-
-
 
 User = get_user_model()
 
@@ -106,18 +101,13 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
         }
 
 
-class BlogDetailSerializer(serializers.ModelSerializer,EagerLoaderMixin):
+class BlogDetailSerializer(serializers.ModelSerializer):
     user = UserGetSerializer()
     category = CategoryCreateSerializer()
-
-    PREFETCH_RELATED_FIELDS = [
-        Prefetch('review', queryset=Review.objects.order_by('-submit_date'))
-    ]
 
     class Meta:
         model = Blog
         fields = '__all__'
-
 
 
 class BlogAdminSerializer(serializers.ModelSerializer):
@@ -126,4 +116,4 @@ class BlogAdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ('user','category','id','add_time','title')
+        fields = ('user', 'category', 'id', 'add_time', 'title')
