@@ -42,9 +42,10 @@ INSTALLED_APPS = [
     'about.apps.AboutConfig',
     'friend.apps.FriendConfig',
     'category.apps.CategoryConfig',
-    'image.apps.ImageConfig'
+    'image.apps.ImageConfig',
+    'oauth.apps.OauthConfig'
 ]
-
+# 评论模型
 COMMENTS_APP = 'review'
 
 SITE_ID =1
@@ -146,6 +147,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 UPLOAD_DIR = 'static/images/%Y/%m/%d'
 
+# rest framework setting
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
@@ -224,3 +226,10 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
     'JWT_AUTH_COOKIE': None
 }
+
+# github auth
+GITHUB_APP_ID = '1c66108fc73cd2f5ef99'
+
+GITHUB_KEY = '86e3a16bff625ddce567606c6bf13091130ebf60'
+
+GITHUB_CALLBACK_URL = 'http://127.0.0.1:8000/oauth/github_check'

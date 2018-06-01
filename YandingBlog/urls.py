@@ -14,6 +14,7 @@ from image.views import BlogImgViewSet
 from like.views import LikeViewSet
 from review.views import ReviewViewSet
 from user.views import UserViewset
+from oauth.views import OAuthViewSet
 
 router = DefaultRouter()
 
@@ -25,6 +26,7 @@ router.register(r'like', LikeViewSet, base_name='like')
 router.register(r'img_upload', BlogImgViewSet, base_name='img_upload')
 router.register(r'friend', FriendViewSet, base_name='friend')
 router.register(r'about', AboutViewSet, base_name='about')
+router.register(r'oauth', OAuthViewSet, base_name='oauth')
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
