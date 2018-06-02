@@ -9,14 +9,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from apps.user.serializers import UserRegisterSerializer, UserGetSerializer, UserPostSerializer
+from apps.user.serializers import UserGetSerializer, UserPostSerializer
 from review.serializers import FlatReviewSerializer
 
 User = get_user_model()
 
 
-class UserViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
-    '''
+class UserViewset(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
     create:
     注册用户
 
@@ -28,7 +28,7 @@ class UserViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
 
     partial_update:
     部分修改
-    '''
+    """
 
     authentication_classes = [SessionAuthentication, JSONWebTokenAuthentication]
 
@@ -43,9 +43,8 @@ class UserViewset(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.Upd
         return [premission() for premission in permission_classes]
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return UserRegisterSerializer
-        elif self.action == 'get':
+
+        if self.action == 'get':
             return UserGetSerializer
         else:
             return UserPostSerializer

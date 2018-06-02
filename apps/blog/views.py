@@ -27,9 +27,8 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
-
 class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    '''
+    """
     list:
     获取博客列表
     retrieve:
@@ -40,7 +39,7 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
     更新博客
     destroy:
     删除博客
-    '''
+    """
     pagination_class = BlogPagination
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
     # filter_class = BlogFilter
@@ -68,7 +67,7 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
             return Blog.objects.get(id=self.kwargs['pk'])
 
     def get_permissions(self):
-        if self.action == 'blog_list' or self.action=='retrieve':
+        if self.action == 'blog_list' or self.action == 'retrieve':
             permission_classes = []
         else:
             permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
@@ -113,7 +112,7 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-    @action(methods=['get'],detail=True)
+    @action(methods=['get'], detail=True)
     def blog_list(self, request, pk=None):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
@@ -124,10 +123,11 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-    @action(methods=['get'],detail=True,serializer_class=TreeReviewSerializer,permission_classes=[])
-    def reviews(self,request,pk=None):
+    @action(methods=['get'], detail=True, serializer_class=TreeReviewSerializer, permission_classes=[])
+    def reviews(self, request, pk=None):
 
-        query =TreeReviewSerializer.setup_eager_loading(Blog.objects.all(),prefetch_related=TreeReviewSerializer.PREFETCH_RELATED_FIELDS)
+        query = TreeReviewSerializer.setup_eager_loading(Blog.objects.all(),
+                                                         prefetch_related=TreeReviewSerializer.PREFETCH_RELATED_FIELDS)
         blog = query.get(id=pk)
         reviews = blog.review.all()
         page = self.paginate_queryset(reviews)

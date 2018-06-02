@@ -8,4 +8,5 @@ def img_download(url):
     :param url:
     :return:
     '''
-    return BytesIO(requests.get(url))
+
+    return BytesIO(requests.get(url).content).getvalue()

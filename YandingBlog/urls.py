@@ -28,11 +28,12 @@ router.register(r'friend', FriendViewSet, base_name='friend')
 router.register(r'about', AboutViewSet, base_name='about')
 router.register(r'oauth', OAuthViewSet, base_name='oauth')
 
+
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     re_path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     re_path(r'doc/', include_docs_urls(title='yanding Api')),
-    re_path(r'^login/', obtain_jwt_token),
+    # re_path(r'^login/', obtain_jwt_token),
     re_path(r'^', include(router.urls)),
 ]
 

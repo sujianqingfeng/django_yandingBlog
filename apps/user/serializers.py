@@ -10,18 +10,22 @@ from utils.request import get_ip_address_from_request
 User = get_user_model()
 
 
-class UserRegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+class UserLoginOrRegisterSerializer(serializers.ModelSerializer):
+    """
+    登陆 注册 序列化
+    """
 
     def create(self, validated_data):
         ip = get_ip_address_from_request(self.context['request'])
 
-        return User.objects.create(**validated_data,ip_joined=ip)
+        return User.objects.create(**validated_data, ip_joined=ip)
 
+    username = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=True, write_only=True)
 
     class Meta:
         model = User
-        fields = ('username', 'phone', 'password')
+        fields = ('username', 'password')
 
 
 class UserGetSerializer(serializers.ModelSerializer):
@@ -48,6 +52,3 @@ class UserPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'phone', 'sex', 'birthday', 'email', 'desc', 'id', 'icon', 'github', 'other_link')
-
-
-

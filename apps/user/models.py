@@ -9,9 +9,9 @@ from utils.image import img_download
 
 
 class User(AbstractUser):
-    '''
+    """
     用户
-    '''
+    """
 
     SEX_TYPE = (
         (1, '男'),
@@ -37,8 +37,8 @@ class User(AbstractUser):
     ip_joined = models.GenericIPAddressField(unpack_ipv4=True, blank=True, null=True, verbose_name='注册')
 
     def img_download(self, url, username):
-        img_bates = img_download(url)
-        self.icon.save(username, ContentFile(img_bates), save=True)
+        img_bytes = img_download(url)
+        self.icon.save('{}.png'.format(username), ContentFile(img_bytes), save=True)
 
     class Meta:
         verbose_name = '用户'

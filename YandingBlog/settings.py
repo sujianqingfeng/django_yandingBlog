@@ -54,6 +54,7 @@ SITE_ID =1
 #     'user.views.CustomBackend',)
 
 MIDDLEWARE = [
+    'utils.middleware.JudgePcOrMobileMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -224,7 +225,7 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': False,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
-    'JWT_AUTH_COOKIE': None
+    'JWT_AUTH_COOKIE': True
 }
 
 # github auth

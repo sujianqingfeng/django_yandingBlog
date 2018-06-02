@@ -10,8 +10,8 @@ from utils.permission import IsOwnerOrReadOnly
 
 
 class LikeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    '''
-    list:
+    """
+     list:
     收藏列表
 
     create:
@@ -19,7 +19,7 @@ class LikeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, mixins.List
 
     ｄetele:
     删除收藏
-    '''
+    """
 
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly,)
     authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
