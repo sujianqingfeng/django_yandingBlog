@@ -14,15 +14,25 @@ User = get_user_model()
 
 
 class Blog(BaseModel):
+    """
+    博客模型
+    """
     user = models.ForeignKey(User, verbose_name='用户', help_text='用户', on_delete=models.CASCADE)
     category = models.ForeignKey(Category, verbose_name='类别', help_text='类别', on_delete=models.CASCADE)
     content = models.TextField(blank=True, verbose_name='博客正文', help_text='博客正文')
     title = models.TextField(null=False, blank=False, verbose_name="标题", help_text='标题')
-    num = models.IntegerField(null=True, blank=True, default=0, verbose_name='数量', help_text='数量')
+    num = models.PositiveIntegerField(null=True, blank=True, default=0, verbose_name='数量', help_text='数量')
     pinned = models.BooleanField(default=False, verbose_name='置顶', help_text='置顶')
     review = GenericRelation(Review, object_id_field='object_pk', content_type_field='content_type', verbose_name='评论')
     excerpt = models.CharField(max_length=200, blank=True, verbose_name='摘要', help_text='摘要')
     sumary_img = models.ImageField(upload_to=settings.UPLOAD_DIR,default='', verbose_name='图片url',help_text='图片url')
+
+    def increase_views(self):
+        """
+        浏览量加1
+        """
+        self.num += 1
+        self.save(update_fields=['num'])
 
     def save(self, *args, **kwargs):
         """

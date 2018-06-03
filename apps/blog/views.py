@@ -27,7 +27,7 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BlogViewSet(mixins.DestroyModelMixin,mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     list:
     获取博客列表
@@ -74,19 +74,15 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
 
         return [premission() for premission in permission_classes]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    """
-        Update a model instance.
-        """
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #
+    # def perform_create(self, serializer):
+    #     serializer.save()
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -95,8 +91,6 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        if getattr(instance, '_prefetched_objects_cache', None):
-            instance._prefetched_objects_cache = {}
 
         return Response(serializer.data, status.HTTP_200_OK)
 
@@ -109,8 +103,9 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.ListModelMixin, viewsets.Gene
 
     def retrieve(self, request, *args, **kwargs):
         instance = Blog.objects.get(id=self.kwargs['pk'])
+        instance.increase_views()
         serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+        return Response(serializer.data,status.HTTP_200_OK)
 
     @action(methods=['get'], detail=True)
     def blog_list(self, request, pk=None):
