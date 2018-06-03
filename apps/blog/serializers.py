@@ -46,7 +46,7 @@ class BlogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ('id', 'category', 'content', 'title', 'user')
+        fields = ('id', 'category', 'content', 'title', 'user','sumary_img')
         extra_kwargs = {
             'category': {'write_only': True},
             'content': {'write_only': True},
@@ -93,7 +93,7 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ('id', 'category', 'content', 'title', 'user')
+        fields = ('id', 'category', 'content', 'title', 'user','sumary_img')
         extra_kwargs = {
             'category': {'write_only': True},
             'content': {'write_only': True},
