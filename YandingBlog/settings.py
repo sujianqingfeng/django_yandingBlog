@@ -234,4 +234,4 @@ GITHUB_APP_ID = '1c66108fc73cd2f5ef99'
 
 GITHUB_KEY = '86e3a16bff625ddce567606c6bf13091130ebf60'
 
-GITHUB_CALLBACK_URL = 'http://127.0.0.1:8000/oauth/github_check'
+GITHUB_CALLBACK_URL = 'http://127.0.0.1:8080/oauth'

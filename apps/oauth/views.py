@@ -52,9 +52,7 @@ class OAuthViewSet(viewsets.GenericViewSet):
         oauth = OAuth.objects.get(openid=open_id, type='1')
         if oauth:
             user = oauth.user
-            token = generate_token(user)
-            response = generate_response(token, user, request)
-            return response
+            return self.custom_response(request, user)
         else:
             user = User.objects.create(username=nickname, desc=signature, password=uuid.uuid1(), sex=sex)
             user.img_download(image_url, nickname)
@@ -62,10 +60,7 @@ class OAuthViewSet(viewsets.GenericViewSet):
 
             instance = OAuth.objects.create(user=user, openid=open_id, type='1')
             instance.save()
-
-            token = generate_token(user)
-            response = generate_response(token, user, request)
-            return response
+            return self.custom_response(request, user)
 
     @action(methods=['post'], detail=False)
     def login(self, request, pk=None):
