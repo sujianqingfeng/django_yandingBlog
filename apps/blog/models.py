@@ -43,7 +43,8 @@ class Blog(BaseModel):
             self.excerpt = strip_tags(md.convert(self.content))[:54]
 
         if not self.sumary_img:
-            self.sumary_img = SummaryImg.objects.filter(user=self.user).order_by('?')[:1][0].sumary_url
+            if SummaryImg.objects.count()>0:
+                self.sumary_img = SummaryImg.objects.filter(user=self.user).order_by('?')[:1][0].sumary_url
 
         super(Blog, self).save(*args, **kwargs)
 

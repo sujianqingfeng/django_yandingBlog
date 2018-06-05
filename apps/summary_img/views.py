@@ -6,7 +6,7 @@ from summary_img.serializers import SummaryImgSeralizer
 from utils.permission import IsOwnerOrReadOnly
 
 
-class SummaryImgViewset(viewsets.ModelViewSet):
+class SummaryImgViewSet(viewsets.ModelViewSet):
     serializer_class = SummaryImgSeralizer
 
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticated]

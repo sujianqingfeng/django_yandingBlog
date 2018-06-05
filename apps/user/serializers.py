@@ -29,19 +29,28 @@ class UserLoginOrRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserGetSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=False, help_text='邮件')
-    sex = serializers.ChoiceField(choices=User.SEX_TYPE)
+    sex = serializers.SerializerMethodField()
+    today = serializers.SerializerMethodField()
+    yesterday = serializers.SerializerMethodField()
+    blog_num = serializers.SerializerMethodField()
 
-    username = serializers.CharField(read_only=True)
+    def get_blog_num(self, obj):
+        return obj.blog_set.all().count()
+
+    def get_today(self, obj):
+        return obj.visit_set.get_this_day().count()
+
+    def get_yesterday(self, obj):
+        return obj.visit_set.get_yesterday().count()
 
     def get_sex(self, obj):
         return obj.get_sex_display()
 
-    sex = serializers.SerializerMethodField()
-
     class Meta:
         model = User
-        fields = ('username', 'phone', 'sex', 'birthday', 'email', 'desc', 'id', 'icon', 'github', 'other_link')
+        fields = (
+            'username', 'phone', 'sex', 'birthday', 'email', 'desc', 'id', 'icon', 'github', 'other_link', 'today',
+            'yesterday','blog_num')
 
 
 class UserPostSerializer(serializers.ModelSerializer):

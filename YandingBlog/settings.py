@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'category.apps.CategoryConfig',
     'image.apps.ImageConfig',
     'oauth.apps.OauthConfig',
-    'summary_img.apps.SummaryImgConfig'
+    'summary_img.apps.SummaryImgConfig',
+    'visit.apps.VisitConfig'
 ]
 # 评论模型
 COMMENTS_APP = 'review'
