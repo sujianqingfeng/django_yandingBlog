@@ -93,8 +93,6 @@ class OAuthViewSet(viewsets.GenericViewSet):
             instance.save()
             return self.custom_response(request, user, is_pc)
 
-
-
     def login(self, request, is_pc):
         """
         登陆接口 根据不同的客户端返回不同的数据
@@ -110,9 +108,6 @@ class OAuthViewSet(viewsets.GenericViewSet):
         else:
             return Response({'detail': '用户不存在'}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
     def register(self, request, is_pc):
         """
         注册接口
@@ -127,9 +122,7 @@ class OAuthViewSet(viewsets.GenericViewSet):
             return Response({'detail': '用户存在'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             user = serializer.save()
-            return self.custom_response(request, user,is_pc)
-
-
+            return self.custom_response(request, user, is_pc)
 
     @staticmethod
     def custom_response(request, user, is_ps=False):
