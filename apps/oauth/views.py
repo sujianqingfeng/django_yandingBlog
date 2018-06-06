@@ -33,9 +33,33 @@ class OAuthViewSet(viewsets.GenericViewSet):
         return HttpResponseRedirect(url)
 
     @action(methods=['get'], detail=False)
-    def github_check(self, request, pk=None):
+    def pc_github_check(self, request, pk=None):
+        return self.github_check(request, is_pc=True)
+
+    @action(methods=['get'], detail=False)
+    def mobile_github_check(self, request, pk=None):
+        return self.github_check(request, is_pc=False)
+
+    @action(methods=['post'], detail=False)
+    def pc_login(self, request, pk=None):
+        return self.login(request, is_pc=True)
+
+    @action(methods=['post'], detail=False)
+    def moblie_login(self, request, pk=None):
+        return self.login(request, is_pc=False)
+
+    @action(methods=['post'], detail=False)
+    def pc_register(self, request, pk=None):
+        return self.register(request, is_pc=True)
+
+    @action(methods=['post'], detail=False)
+    def mobile_register(self, request, pk=None):
+        return self.register(request, is_pc=False)
+
+    @staticmethod
+    def github_check_before(request):
         """
-        github认证成功后，进行校验
+        github check 之前执行
         """
         code = request.query_params['code']
         auth = AuthGithub(settings.GITHUB_APP_ID, settings.GITHUB_KEY, settings.GITHUB_CALLBACK_URL)
@@ -50,9 +74,16 @@ class OAuthViewSet(viewsets.GenericViewSet):
         sex = '3'
 
         oauth = OAuth.objects.get(openid=open_id, type='1')
+        return oauth, nickname, image_url, signature, sex, open_id
+
+    def github_check(self, request, is_pc):
+        """
+        github认证成功后，进行校验
+        """
+        oauth, nickname, image_url, signature, sex, open_id = self.github_check_before(request)
         if oauth:
             user = oauth.user
-            return self.custom_response(request, user)
+            return self.custom_response(request, user, is_pc)
         else:
             user = User.objects.create(username=nickname, desc=signature, password=uuid.uuid1(), sex=sex)
             user.img_download(image_url, nickname)
@@ -60,10 +91,11 @@ class OAuthViewSet(viewsets.GenericViewSet):
 
             instance = OAuth.objects.create(user=user, openid=open_id, type='1')
             instance.save()
-            return self.custom_response(request, user)
+            return self.custom_response(request, user, is_pc)
 
-    @action(methods=['post'], detail=False)
-    def login(self, request, pk=None):
+
+
+    def login(self, request, is_pc):
         """
         登陆接口 根据不同的客户端返回不同的数据
         """
@@ -74,12 +106,14 @@ class OAuthViewSet(viewsets.GenericViewSet):
         password = serializer.validated_data.get('password')
         user = auth.authenticate(username=username, password=password)
         if user is not None and user.is_active:
-            return self.custom_response(request, user)
+            return self.custom_response(request, user, is_pc)
         else:
             return Response({'detail': '用户不存在'}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods=['post'], detail=False)
-    def register(self, request, pk=None):
+
+
+
+    def register(self, request, is_pc):
         """
         注册接口
         """
@@ -93,16 +127,17 @@ class OAuthViewSet(viewsets.GenericViewSet):
             return Response({'detail': '用户存在'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             user = serializer.save()
-            return self.custom_response(request, user)
+            return self.custom_response(request, user,is_pc)
+
+
 
     @staticmethod
-    def custom_response(request, user):
-        is_mobile = request.META.get('IS_MOBILE')
+    def custom_response(request, user, is_ps=False):
         if user is not None and user.is_active:
-            if is_mobile:
+            if is_ps:
+                auth.login(request, user)
+                return Response(status=status.HTTP_200_OK)
+            else:
                 token = generate_token(user)
                 response = generate_response(token, user, request)
                 return response
-            else:
-                auth.login(request, user)
-                return Response(status=status.HTTP_200_OK)
