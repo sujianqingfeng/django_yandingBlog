@@ -13,8 +13,8 @@ class CategoryCreateSerializer(serializers.ModelSerializer):
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    update_time = serializers.DateField(read_only=True)
-    add_time = serializers.DateField(read_only=True)
+    update_time = serializers.DateTimeField(read_only=True)
+    add_time = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Category

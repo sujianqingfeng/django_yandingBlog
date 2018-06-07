@@ -7,7 +7,7 @@ from rest_framework import mixins, viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.user.serializers import UserGetSerializer, UserPostSerializer
+from apps.user.serializers import UserDetaiilSerializer, UserPostSerializer
 from review.serializers import FlatReviewSerializer
 
 User = get_user_model()
@@ -31,7 +31,7 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.G
     def get_serializer_class(self):
 
         if self.action == 'retrieve' or self.action == 'infos':
-            return UserGetSerializer
+            return UserDetaiilSerializer
         else:
             return UserPostSerializer
 

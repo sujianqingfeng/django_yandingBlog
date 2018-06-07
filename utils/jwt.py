@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
 
-from apps.user.serializers import UserGetSerializer
+from apps.user.serializers import UserSimpleSerializer
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -23,7 +23,7 @@ def jwt_response_payload_handler(token, user=None, request=None):
     user_logged_in.send(sender='', user=user, request=request)
     return {
         'token': token,
-        'user': UserGetSerializer(user, context={'request': request}).data
+        'user': UserSimpleSerializer(user, context={'request': request}).data
     }
 
 

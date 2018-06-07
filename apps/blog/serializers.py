@@ -13,7 +13,7 @@ from rest_framework import serializers
 from blog.models import Blog
 from category.models import Category
 from category.serializers import CategoryCreateSerializer
-from user.serializers import UserGetSerializer
+from user.serializers import UserSimpleSerializer
 
 User = get_user_model()
 
@@ -46,7 +46,7 @@ class BlogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ('id', 'category', 'content', 'title', 'user','sumary_img')
+        fields = ('id', 'category', 'content', 'title', 'user', 'sumary_img')
         extra_kwargs = {
             'category': {'write_only': True},
             'content': {'write_only': True},
@@ -93,7 +93,7 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blog
-        fields = ('id', 'category', 'content', 'title', 'user','sumary_img')
+        fields = ('id', 'category', 'content', 'title', 'user', 'sumary_img')
         extra_kwargs = {
             'category': {'write_only': True},
             'content': {'write_only': True},
@@ -102,12 +102,24 @@ class BlogUpdateSerializer(serializers.ModelSerializer):
 
 
 class BlogDetailSerializer(serializers.ModelSerializer):
-    user = UserGetSerializer()
+    user = UserSimpleSerializer()
     category = CategoryCreateSerializer()
 
     class Meta:
         model = Blog
         fields = '__all__'
+
+
+class BlogSimpleSerializer(serializers.ModelSerializer):
+    """
+    blog 概要信息 适用于展示blog列表的时候
+    """
+    user = UserSimpleSerializer()
+    category = CategoryCreateSerializer()
+
+    class Meta:
+        model = Blog
+        fields = ('user', 'category', 'id', 'add_time', 'title', 'num', 'excerpt', 'sumary_img')
 
 
 class BlogAdminSerializer(serializers.ModelSerializer):

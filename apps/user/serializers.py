@@ -6,6 +6,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from utils.request import get_ip_address_from_request
+from category.serializers import CategoryDetailSerializer
 
 User = get_user_model()
 
@@ -28,11 +29,20 @@ class UserLoginOrRegisterSerializer(serializers.ModelSerializer):
         fields = ('username', 'password')
 
 
-class UserGetSerializer(serializers.ModelSerializer):
+class UserDetaiilSerializer(serializers.ModelSerializer):
+    """
+    详细信息 适用于管理界面获取用户
+    """
     sex = serializers.SerializerMethodField()
     today = serializers.SerializerMethodField()
     yesterday = serializers.SerializerMethodField()
     blog_num = serializers.SerializerMethodField()
+    categorys = serializers.SerializerMethodField()
+
+    def get_categorys(self, obj):
+        datas = obj.category_set.all()
+        serializer = CategoryDetailSerializer(datas, many=True)
+        return serializer.data
 
     def get_blog_num(self, obj):
         return obj.blog_set.all().count()
@@ -50,7 +60,16 @@ class UserGetSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'username', 'phone', 'sex', 'birthday', 'email', 'desc', 'id', 'icon', 'github', 'other_link', 'today',
-            'yesterday','blog_num')
+            'yesterday', 'blog_num', 'categorys')
+
+
+class UserSimpleSerializer(serializers.ModelSerializer):
+    """
+    用户的简单信息 适用于附带于blog列表上
+    """
+    class Meta:
+        model = User
+        fields = ('username','id', 'icon','github', 'other_link')
 
 
 class UserPostSerializer(serializers.ModelSerializer):

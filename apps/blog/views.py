@@ -12,8 +12,9 @@ from rest_framework.response import Response
 from utils.permission import IsOwnerOrReadOnly
 from .filters import BlogFilter
 from .models import Blog
-from .serializers import BlogSerializer, BlogDetailSerializer, BlogUpdateSerializer, BlogAdminSerializer
-from review.serializers import TreeReviewSerializer, FlatReviewSerializer
+from .serializers import BlogSerializer, BlogDetailSerializer, BlogUpdateSerializer, BlogAdminSerializer, \
+    BlogSimpleSerializer
+from review.serializers import TreeReviewSerializer
 
 User = get_user_model()
 
@@ -27,7 +28,8 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class BlogViewSet(mixins.DestroyModelMixin,mixins.CreateModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
     """
     list:
     获取博客列表
@@ -48,23 +50,17 @@ class BlogViewSet(mixins.DestroyModelMixin,mixins.CreateModelMixin, mixins.ListM
     ordering_fields = '__all__'
 
     def get_serializer_class(self):
-        if self.action == 'blog_list' or self.action == 'retrieve':
-            return BlogDetailSerializer
+        if self.action == 'blog_list' or self.action == 'list':
+            return BlogSimpleSerializer
         elif self.action == 'partial_update' or self.action == 'update':
             return BlogUpdateSerializer
-        elif self.action == 'list':
-            return BlogAdminSerializer
+        elif self.action == 'retrieve':
+            return BlogDetailSerializer
         else:
             return BlogSerializer
 
     def get_queryset(self):
-        if self.action == 'blog_list':
-            user = User.objects.get(id=self.kwargs['pk'])
-            return Blog.objects.filter(user=user)
-        elif self.action == 'list' or self.action == 'destroy':
-            return Blog.objects.all()
-        else:
-            return Blog.objects.get(id=self.kwargs['pk'])
+        return Blog.objects.all()
 
     def get_permissions(self):
         if self.action == 'blog_list' or self.action == 'retrieve':
@@ -91,7 +87,6 @@ class BlogViewSet(mixins.DestroyModelMixin,mixins.CreateModelMixin, mixins.ListM
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-
         return Response(serializer.data, status.HTTP_200_OK)
 
     def perform_update(self, serializer):
@@ -101,15 +96,10 @@ class BlogViewSet(mixins.DestroyModelMixin,mixins.CreateModelMixin, mixins.ListM
         kwargs['partial'] = True
         return self.update(request, *args, **kwargs)
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = Blog.objects.get(id=self.kwargs['pk'])
-        instance.increase_views()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data,status.HTTP_200_OK)
-
     @action(methods=['get'], detail=True)
     def blog_list(self, request, pk=None):
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset = Blog.objects.filter(user_id=pk)
+        queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
