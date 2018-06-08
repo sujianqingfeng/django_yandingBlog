@@ -34,7 +34,7 @@ class FriendViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Updat
 
         return [premission() for premission in permission_classes]
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['get'], detail=True)
     def links(self, request, pk=None):
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
