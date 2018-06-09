@@ -12,4 +12,4 @@ class SummaryImgSeralizer(serializers.ModelSerializer):
 
     class Meta:
         model = SummaryImg
-        fields = ('user', 'sumary_url')
+        fields = ('user', 'sumary_url','id')
