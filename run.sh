@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-echo '11111'
+touch cc.txt
