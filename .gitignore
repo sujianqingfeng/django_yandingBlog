@@ -109,5 +109,4 @@ venv.bak/
 
 *.sqlite3
 
-migrations/
 
