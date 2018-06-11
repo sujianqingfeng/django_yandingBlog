@@ -1,24 +1,22 @@
 language: python
 python:
-  - '3.6'
+- '3.6'
 branches:
-    only:
-    - master
+  only:
+  - master
 env:
-  - DJANGO=2.0
+- DJANGO=2.0
 install:
-  - touch aa.txt
-#  - cd proj/
-#  - pip install -r requirements.txt
+- touch aa.txt
 script:
-#  - python manage.py test users.tests.UserTestCase
 - touch bb.txt
 before_install:
+- openssl aes-256-cbc -K $encrypted_b9b8a2ac834f_key -iv $encrypted_b9b8a2ac834f_iv
+  -in django.enc -out django -d
 - openssl aes-256-cbc -K $encrypted_2bc13221a680_key -iv $encrypted_2bc13221a680_iv
   -in id_rsa_deploy.enc -out ~/.ssh/id_rsa -d
 - chmod 600 ~/.ssh/id_rsa
-  # - cp .travis/ssh_config ~/.ssh/config
 addons:
-    ssh_known_hosts: ${HOST}:${PORT}
+  ssh_known_hosts: ${HOST}:${PORT}
 after_success:
 - ssh -p ${PORT} -tt ${USER}@${HOST} < run.sh
