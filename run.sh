@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-touch cc.txt
+git clone https://github.com/sujianqingfeng/django_yandingBlog.git
+pipenv install --three
+uwsgi --ini uwsgi.ini
