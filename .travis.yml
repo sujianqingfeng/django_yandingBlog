@@ -16,4 +16,4 @@ before_install:
 addons:
   ssh_known_hosts: ${HOST}:${PORT}
 after_success:
-  - ssh -o StrictHostKeyChecking=no -p ${PORT} -tt ${USER}@${HOST} < run.sh
+  - ssh -o StrictHostKeyChecking=no -p ${PORT} ${USER}@${HOST} < run.sh
