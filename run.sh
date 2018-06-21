@@ -7,4 +7,4 @@ pipenv install --three
 pipenv run python manage.py migrate
 pipenv run python manage.py collectstatic
 sudo killall -9 uwsgi
-pipenv run uwsgi --ini uwsgi.ini
+uwsgi --ini uwsgi.ini
