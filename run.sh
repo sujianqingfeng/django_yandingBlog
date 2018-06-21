@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+rm -fr django_yandingBlog
 git clone https://github.com/sujianqingfeng/django_yandingBlog.git
 cd django_yandingBlog
 pipenv install --three
