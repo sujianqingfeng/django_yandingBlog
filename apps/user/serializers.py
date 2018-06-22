@@ -73,6 +73,9 @@ class UserSimpleSerializer(serializers.ModelSerializer):
 
 
 class UserPostSerializer(serializers.ModelSerializer):
+    """
+    适用于修改用户信息
+    """
     email = serializers.EmailField(required=False, help_text='邮件')
     sex = serializers.ChoiceField(choices=User.SEX_TYPE)
     username = serializers.CharField(read_only=True)
