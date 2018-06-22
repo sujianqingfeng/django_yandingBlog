@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'django_comments',
     'mptt',
 
-
     # my apps
     'user.apps.UserConfig',
     'blog.apps.BlogConfig',
@@ -50,7 +49,7 @@ INSTALLED_APPS = [
 # 评论模型
 COMMENTS_APP = 'review'
 
-SITE_ID =1
+SITE_ID = 1
 
 # AUTHENTICATION_BACKENDS = (
 #     'user.views.CustomBackend',)
@@ -164,7 +163,8 @@ REST_FRAMEWORK = {
 
     'EXCEPTION_HANDLER': (
         'utils.exception.custom_exception_handler'
-    )
+    ),
+    # 'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 # 跨域设置
 CORS_ALLOW_CREDENTIALS = True

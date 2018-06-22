@@ -28,7 +28,8 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.ListModelMixin,
+class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin,
+                  mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     """
     list:
@@ -43,14 +44,12 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Cr
     删除博客
     """
     pagination_class = BlogPagination
-    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
-    # filter_class = BlogFilter
-    search_fields = ('title')
-    ordering = ('add_time',)
-    ordering_fields = '__all__'
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = BlogFilter
+    # filter_fields = ('username',)
 
     def get_serializer_class(self):
-        if self.action == 'blog_list' or self.action == 'list':
+        if self.action == 'list_by_id' or self.action == 'list' or self.action == 'list_by_name':
             return BlogSimpleSerializer
         elif self.action == 'partial_update' or self.action == 'update':
             return BlogUpdateSerializer
@@ -80,24 +79,27 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Cr
     # def perform_create(self, serializer):
     #     serializer.save()
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_queryset()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        return Response(serializer.data, status.HTTP_200_OK)
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def partial_update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return self.update(request, *args, **kwargs)
+    # def update(self, request, *args, **kwargs):
+    #     partial = kwargs.pop('partial', False)
+    #     instance = self.get_queryset()
+    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
+    #
+    #     return Response(serializer.data, status.HTTP_200_OK)
+    #
+    # def perform_update(self, serializer):
+    #     serializer.save()
+    #
+    # def partial_update(self, request, *args, **kwargs):
+    #     kwargs['partial'] = True
+    #     return self.update(request, *args, **kwargs)
 
     @action(methods=['get'], detail=True)
-    def blog_list(self, request, pk=None):
+    def list_by_id(self, request, pk=None):
+        """
+        通过id 获取blog
+        """
         queryset = Blog.objects.filter(user_id=pk)
         queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
@@ -106,10 +108,29 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Cr
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=False)
+    def list_by_name(self, request, pk=None):
+        """
+        通过名字 获取blog
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+        # queryset = Blog.objects.filter(user__username=request.query_params.get('name'))
+        # queryset = self.filter_queryset(queryset)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=True, serializer_class=TreeReviewSerializer, permission_classes=[])
     def reviews(self, request, pk=None):
+        """
+        对应blog的评论
+        """
 
         query = TreeReviewSerializer.setup_eager_loading(Blog.objects.all(),
                                                          prefetch_related=TreeReviewSerializer.PREFETCH_RELATED_FIELDS)
