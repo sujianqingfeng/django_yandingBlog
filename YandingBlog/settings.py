@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_comments',
     'mptt',
+    'rest_framework_swagger',
 
     # my apps
     'user.apps.UserConfig',
@@ -50,6 +51,9 @@ INSTALLED_APPS = [
 COMMENTS_APP = 'review'
 
 SITE_ID = 1
+
+LOGIN_URL = 'rest_framework:login'
+LOGOUT_URL = 'rest_framework:logout'
 
 # AUTHENTICATION_BACKENDS = (
 #     'user.views.CustomBackend',)
@@ -237,3 +241,13 @@ GITHUB_APP_ID = '1c66108fc73cd2f5ef99'
 GITHUB_KEY = '86e3a16bff625ddce567606c6bf13091130ebf60'
 
 GITHUB_CALLBACK_URL = 'http://127.0.0.1:8080/oauth'
+
+# swagger
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+    'DOC_EXPANSION':'none'
+}

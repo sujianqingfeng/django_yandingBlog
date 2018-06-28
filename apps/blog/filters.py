@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
+import coreapi
 from django_filters import rest_framework as filter
+from rest_framework.filters import BaseFilterBackend
 
 from blog.models import Blog, Category
 
@@ -11,9 +12,19 @@ class BlogFilter(filter.FilterSet):
     博客过滤
     """
 
-    title = filter.CharFilter(name='title', lookup_expr='icontains', help_text='标题')
-    username = filter.CharFilter(name='username', lookup_expr='gt', help_text='名字')
+    title = filter.CharFilter(lookup_expr='icontains', help_text='标题')
+    username = filter.CharFilter(lookup_expr='gt', help_text='名字')
 
     class Meta:
         model = Blog
         fields = ['title', 'username']
+
+
+class SimpleFilterBackend(BaseFilterBackend):
+    def get_schema_fields(self, view):
+        return [coreapi.Field(
+            name='query',
+            location='query',
+            required=False,
+            type='string'
+        )]

@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from utils.permission import IsOwnerOrReadOnly
 from .filters import BlogFilter
 from .models import Blog
-from .serializers import BlogSerializer, BlogDetailSerializer, BlogUpdateSerializer, BlogAdminSerializer, \
+from .serializers import BlogSerializer, BlogDetailSerializer, BlogUpdateSerializer, \
     BlogSimpleSerializer
 from review.serializers import TreeReviewSerializer
 
@@ -69,31 +69,6 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Up
 
         return [premission() for premission in permission_classes]
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #
-    # def perform_create(self, serializer):
-    #     serializer.save()
-
-    # def update(self, request, *args, **kwargs):
-    #     partial = kwargs.pop('partial', False)
-    #     instance = self.get_queryset()
-    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #
-    #     return Response(serializer.data, status.HTTP_200_OK)
-    #
-    # def perform_update(self, serializer):
-    #     serializer.save()
-    #
-    # def partial_update(self, request, *args, **kwargs):
-    #     kwargs['partial'] = True
-    #     return self.update(request, *args, **kwargs)
 
     @action(methods=['get'], detail=True)
     def list_by_id(self, request, pk=None):
@@ -114,6 +89,10 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Up
     def list_by_name(self, request, pk=None):
         """
         通过名字 获取blog
+        ---
+        parameters:
+            - username:username
+
         """
         queryset = self.filter_queryset(self.get_queryset())
         # queryset = Blog.objects.filter(user__username=request.query_params.get('name'))
