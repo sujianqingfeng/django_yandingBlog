@@ -20,11 +20,3 @@ class BlogFilter(filter.FilterSet):
         fields = ['title', 'username']
 
 
-class SimpleFilterBackend(BaseFilterBackend):
-    def get_schema_fields(self, view):
-        return [coreapi.Field(
-            name='query',
-            location='query',
-            required=False,
-            type='string'
-        )]

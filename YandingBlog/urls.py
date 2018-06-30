@@ -4,9 +4,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
-from rest_framework.schemas import get_schema_view
-from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
-from rest_framework_swagger.views import get_swagger_view
+# from rest_framework.schemas import get_schema_view
+# from rest_framework_swagger.renderers import OpenAPIRenderer, SwaggerUIRenderer
+# from rest_framework_swagger.views import get_swagger_view
+
 
 from about.views import AboutViewSet
 from blog.views import BlogViewSet
@@ -19,6 +20,10 @@ from review.views import ReviewViewSet
 from summary_img.views import SummaryImgViewSet
 from user.views import UserViewSet
 from visit.views import VisitViewSet
+
+from utils.swagger import get_swagger_view
+
+
 
 router = DefaultRouter()
 
@@ -34,7 +39,9 @@ router.register(r'oauth', OAuthViewSet, base_name='oauth')
 router.register(r'summary-img', SummaryImgViewSet, base_name='summary-img')
 router.register(r'visit', VisitViewSet, base_name='visit')
 
-schema_view = get_schema_view(title='Yanding Blog API',renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
+# schema_view = get_schema_view(title='Yanding Blog API',renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
+# schema_view = get_schema_view(title='Yanding Blog API')
+schema_view = get_swagger_view(title='Yanding Blog API')
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
