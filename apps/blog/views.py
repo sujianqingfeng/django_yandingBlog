@@ -47,8 +47,8 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Up
     删除博客
     """
     pagination_class = BlogPagination
-    filter_backends = (DjangoFilterBackend,)
-    filter_class = BlogFilter
+    # filter_backends = (DjangoFilterBackend,)
+    # filter_class = BlogFilter
 
     # filter_fields = ('username',)
 
@@ -103,8 +103,8 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Up
           required: true
           location: query
         """
-        queryset = self.filter_queryset(self.get_queryset())
-        # queryset = Blog.objects.filter(user__username=request.query_params.get('name'))
+        # queryset = self.filter_queryset(self.get_queryset())
+        queryset = Blog.objects.filter(user__username=request.query_params.get('name'))
         # queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:

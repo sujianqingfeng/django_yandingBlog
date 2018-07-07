@@ -54,7 +54,7 @@ class UserViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.G
         """
         通过名字获取用户信息
         """
-        username =request.query_params.get('username')
+        username =request.query_params.get('name')
         user = User.objects.get(username=username)
         serializer = self.get_serializer(user)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
