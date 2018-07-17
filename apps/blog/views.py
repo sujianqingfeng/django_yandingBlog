@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.schemas import AutoSchema
 
 from utils.permission import IsOwnerOrReadOnly
 from .filters import BlogFilter
@@ -28,6 +29,8 @@ class BlogPagination(PageNumberPagination):
     max_page_size = 100
 
 
+
+
 class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.CreateModelMixin,
                   mixins.ListModelMixin,
                   viewsets.GenericViewSet):
@@ -44,9 +47,13 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Up
     删除博客
     """
     pagination_class = BlogPagination
-    filter_backends = (DjangoFilterBackend,)
-    filter_class = BlogFilter
+    # filter_backends = (DjangoFilterBackend,)
+    # filter_class = BlogFilter
+
     # filter_fields = ('username',)
+
+
+
 
     def get_serializer_class(self):
         if self.action == 'list_by_id' or self.action == 'list' or self.action == 'list_by_name':
@@ -88,14 +95,16 @@ class BlogViewSet(mixins.DestroyModelMixin, mixins.RetrieveModelMixin, mixins.Up
     @action(methods=['get'], detail=False)
     def list_by_name(self, request, pk=None):
         """
-        通过名字 获取blog
-        ---
+        desc: the desc of this api.
         parameters:
-            - username:username
-
+        - username: mobile
+          desc: the mobile number
+          type: string
+          required: true
+          location: query
         """
-        queryset = self.filter_queryset(self.get_queryset())
-        # queryset = Blog.objects.filter(user__username=request.query_params.get('name'))
+        # queryset = self.filter_queryset(self.get_queryset())
+        queryset = Blog.objects.filter(user__username=request.query_params.get('name'))
         # queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
