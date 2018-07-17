@@ -16,7 +16,7 @@ User = get_user_model()
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         password = instance.password
-        instance.set_password(password)
+        # instance.set_password(password)
         instance.save()
 
 
